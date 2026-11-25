@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student profile</title>
+    <style>
+      :root {
+        --bg: #001e2b;
+        --panel: #0b2a38;
+        --panel-2: #0f3142;
+        --line: #1c3d4c;
+        --green: #00ed64;
+        --green-soft: #13aa52;
+        --green-dim: #00684a;
+        --text-muted: #6fb99a;
+      }
+
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        background: var(--bg);
+        color: var(--green);
+        font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        line-height: 1.5;
+        min-height: 100vh;
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 14px clamp(16px, 4vw, 40px);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .back-link {
+        color: var(--green);
+        text-decoration: none;
+        padding: 8px 14px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+      .back-link:hover { border-color: var(--green-soft); }
+
+      h1 { font-size: clamp(22px, 3.2vw, 30px); font-weight: 600; }
+
+      main {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: clamp(20px, 4vw, 40px);
+        display: grid;
+        gap: clamp(16px, 3vw, 24px);
+      }
+
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: clamp(18px, 3vw, 28px);
+      }
+
+      h2 {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text-muted);
+        margin-bottom: 14px;
+      }
+
+      /* top card: avatar on the left, details on the right */
+      .profile-head {
+        display: flex;
+        align-items: center;
+        gap: clamp(16px, 3vw, 28px);
+      }
+
+      .avatar {
+        width: clamp(88px, 16vw, 120px);
+        height: clamp(88px, 16vw, 120px);
+        flex-shrink: 0;
+        border-radius: 50%;
+        border: 3px solid var(--green-dim);
+        background: var(--panel-2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: clamp(30px, 6vw, 42px);
+        font-weight: 600;
+      }
+
+      .info { min-width: 0; }
+
+      .name {
+        font-size: clamp(22px, 4vw, 30px);
+        font-weight: 700;
+        color: var(--green);
+        margin-bottom: 6px;
+        overflow-wrap: anywhere;
+      }
+
+      .detail {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        color: var(--text-muted);
+        margin-top: 4px;
+      }
+      .detail svg {
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+        margin-top: 5px;
+        color: var(--green-soft);
+      }
+      .detail span { overflow-wrap: anywhere; }
+
+      /* grade */
+      .grade { font-size: clamp(48px, 10vw, 72px); font-weight: 700; line-height: 1; }
+
+      /* marks table */
+      .table-wrap { overflow-x: auto; }
+      table { width: 100%; border-collapse: collapse; }
+      th, td { text-align: left; padding: 12px 14px; }
+      th {
+        font-size: 13px;
+        color: var(--green-soft);
+        background: var(--panel-2);
+        border-bottom: 1px solid var(--line);
+      }
+      td { border-bottom: 1px solid var(--line); }
+      td:last-child, th:last-child { text-align: right; }
+      tbody tr:last-child td { border-bottom: none; }
+
+      /* search bar */
+      .search { display: flex; gap: 12px; }
+      .search input {
+        flex: 1;
+        min-width: 0;
+        padding: 12px 14px;
+        background: var(--panel);
+        color: var(--green);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        font: inherit;
+      }
+      .search input::placeholder { color: var(--green-dim); }
+      .search input:focus {
+        outline: none;
+        border-color: var(--green);
+        box-shadow: 0 0 0 3px rgba(0, 237, 100, 0.18);
+      }
+      .search button {
+        padding: 12px 22px;
+        background: var(--green);
+        color: var(--bg);
+        border: 1px solid var(--green);
+        border-radius: 8px;
+        font: inherit;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .search button:hover { background: #3dffa0; }
+
+      .message {
+        padding: 32px 20px;
+        text-align: center;
+        color: var(--text-muted);
+        border: 1px dashed var(--line);
+        border-radius: 10px;
+      }
+
+      @media (max-width: 460px) {
+        .profile-head { flex-direction: column; text-align: center; }
+        .detail { justify-content: center; }
+      }
+    </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <a class="back-link" href="view-all-students">&larr; All students</a>
+    <h1>Student profile</h1>
+  </header>
+
+  <main>
+
+    <form class="search" action="/profile" method="GET">
+      <input type="text" name="id" placeholder="Enter student ID" value="<%= id %>" autocomplete="off" required>
+      <button type="submit">Search</button>
+    </form>
+
+    <% if (student) { %>
+
+    <section class="card profile-head">
+      <div class="avatar">
+        <%= student.name %>
+      </div>
+
+      <div class="info">
+        <h2 class="name"><%= student.name %></h2>
+
+        <p class="detail">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></svg>
+          <span>Class <%= student.class %></span>
+        </p>
+
+        <p class="detail">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+          <span><%= student.address %></span>
+        </p>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Grade</h2>
+      <div class="grade"><%= student.grade %></div>
+    </section>
+
+    <section class="card">
+      <h2>Marks</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Subject</th><th>Marks</th></tr>
+          </thead>
+        </table>
+      </div>
+    </section>
+
+    <% } else if (id) { %>
+      <p class="message">No student found with ID <%= id %>.</p>
+    <% } %>
+
+  </main>
+
+</body>
+</html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Add student</title>
+    <style>
+        :root {
+            --bg: #001e2b;
+            --panel: #0b2a38;
+            --panel-2: #0f3142;
+            --line: #1c3d4c;
+            --green: #00ed64;
+            --green-soft: #13aa52;
+            --green-dim: #00684a;
+            --text-muted: #6fb99a;
+            --error: #ff6f6f;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--green);
+            font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 14px clamp(16px, 4vw, 40px);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .back-link {
+            color: var(--green);
+            text-decoration: none;
+            padding: 8px 14px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--panel);
+        }
+
+        .back-link:hover {
+            border-color: var(--green-soft);
+        }
+
+        h1 {
+            font-size: clamp(22px, 3.2vw, 30px);
+            font-weight: 600;
+        }
+
+        main {
+            max-width: 560px;
+            margin: 0 auto;
+            padding: clamp(20px, 5vw, 48px) clamp(16px, 4vw, 24px);
+        }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: clamp(20px, 4vw, 32px);
+        }
+
+        .card h2 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .card .intro {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin: 4px 0 24px;
+        }
+
+        .field {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px 14px;
+            background: var(--bg);
+            color: var(--green);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            font: inherit;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 96px;
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: var(--green-dim);
+        }
+
+        input:hover,
+        select:hover,
+        textarea:hover {
+            border-color: var(--green-dim);
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--green);
+            box-shadow: 0 0 0 3px rgba(0, 237, 100, 0.18);
+        }
+
+        .has-error input,
+        .has-error select,
+        .has-error textarea {
+            border-color: var(--error);
+        }
+
+        .error-text {
+            color: var(--error);
+            font-size: 13px;
+            margin-top: 6px;
+        }
+
+        .alert {
+            padding: 12px 14px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .alert.success {
+            background: rgba(0, 237, 100, 0.1);
+            border: 1px solid var(--green-dim);
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font: inherit;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--green);
+            color: var(--bg);
+            border: 1px solid var(--green);
+        }
+
+        .btn-primary:hover {
+            background: #3dffa0;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--green);
+            border: 1px solid var(--line);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--green-soft);
+        }
+
+        .btn:focus-visible {
+            outline: 2px solid var(--green);
+            outline-offset: 2px;
+        }
+
+        .hint { color: var(--text-muted); font-size: 13px; margin-top: 6px; }
+
+        @media (max-width: 420px) {
+            .actions {
+                flex-direction: column-reverse;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <header class="topbar">
+        <a class="back-link" href="/dashboard">&larr; Dashboard</a>
+        <h1>Add student</h1>
+    </header>
+
+    <main>
+        <form class="card" action="/students" method="POST">
+            <h2>Student details</h2>
+            <p class="intro">Fill in the details below to add a new student.</p>
+
+            <div class="field">
+                <label for="studentId">Student ID</label>
+                <input type="text" id="id" name="id" placeholder="e.g. 101" autocomplete="off" required>
+                <p class="hint">Use a unique ID for each student.</p>
+            </div>
+
+            <div class="field">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" placeholder="Full name" autocomplete="off" required>
+            </div>
+
+            <div class="field">
+                <label for="class">Class</label>
+                <select id="class" name="class" required>
+                    <option value="" disabled selected>Select class</option>
+                    <option value="1">Class 1</option>
+                    <option value="2">Class 2</option>
+                    <option value="3">Class 3</option>
+                    <option value="4">Class 4</option>
+                    <option value="5">Class 5</option>
+                    <option value="6">Class 6</option>
+                    <option value="7">Class 7</option>
+                    <option value="8">Class 8</option>
+                    <option value="9">Class 9</option>
+                    <option value="10">Class 10</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="address">Address</label>
+                <textarea id="address" name="address" placeholder="House name, place, district" required></textarea>
+            </div>
+
+            <div class="actions">
+                <a class="btn btn-secondary" href="/students">Cancel</a>
+                <button class="btn btn-primary" type="submit">Save student</button>
+            </div>
+        </form>
+    </main>
+
+</body>
+
+</html>

@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dashboard</title>
+    <style>
+        :root {
+            --bg: #001e2b;
+            --panel: #0b2a38;
+            --panel-2: #0f3142;
+            --line: #1c3d4c;
+            --green: #00ed64;
+            --green-soft: #13aa52;
+            --green-dim: #00684a;
+            --text-muted: #6fb99a;
+            --hover: #123546;
+            --radius: 10px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--green);
+            font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        /* ---------- Top bar ---------- */
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 14px clamp(16px, 4vw, 40px);
+            background: rgba(0, 30, 43, 0.92);
+            backdrop-filter: blur(6px);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .menu-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            flex-shrink: 0;
+            background: var(--panel);
+            color: var(--green);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: border-color 0.15s, background 0.15s;
+        }
+
+        .menu-btn:hover {
+            border-color: var(--green-soft);
+            background: var(--panel-2);
+        }
+
+        .menu-btn svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        h1 {
+            font-size: clamp(22px, 3.2vw, 30px);
+            font-weight: 600;
+            letter-spacing: 0.2px;
+        }
+
+        /* ---------- Sidebar ---------- */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: min(290px, 85vw);
+            display: flex;
+            flex-direction: column;
+            background: var(--panel);
+            border-right: 1px solid var(--line);
+            transform: translateX(-100%);
+            transition: transform 0.25s ease;
+            z-index: 20;
+            visibility: hidden;
+        }
+
+        .sidebar.open {
+            transform: translateX(0);
+            visibility: visible;
+        }
+
+        .sidebar-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--line);
+            font-weight: 600;
+            font-size: 17px;
+        }
+
+        .close-btn {
+            width: 36px;
+            height: 36px;
+            background: none;
+            border: none;
+            border-radius: 6px;
+            color: var(--green);
+            font-size: 26px;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            background: var(--hover);
+        }
+
+        .sidebar nav {
+            padding: 10px 0;
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 20px;
+            color: var(--green);
+            text-decoration: none;
+            border-left: 3px solid transparent;
+            transition: background 0.15s, border-color 0.15s;
+        }
+
+        .sidebar a:hover {
+            background: var(--hover);
+            border-left-color: var(--green);
+        }
+
+        .sidebar a svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            color: var(--green-soft);
+        }
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 10, 15, 0.65);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+            z-index: 10;
+        }
+
+        .overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* ---------- Content ---------- */
+        main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: clamp(20px, 4vw, 40px);
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: clamp(16px, 3vw, 32px);
+            align-items: stretch;
+            /* the line to add */
+        }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            padding: clamp(18px, 3vw, 28px);
+        }
+
+        h2 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+        }
+
+        .total-count {
+            font-size: clamp(48px, 9vw, 76px);
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .total-note {
+            margin-top: 12px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 13px 14px;
+        }
+
+        th {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--green-soft);
+            background: var(--panel-2);
+            border-bottom: 1px solid var(--line);
+        }
+
+        th:first-child {
+            border-top-left-radius: 8px;
+        }
+
+        th:last-child {
+            border-top-right-radius: 8px;
+        }
+
+        td {
+            border-bottom: 1px solid var(--line);
+        }
+
+        tbody tr:hover {
+            background: var(--panel-2);
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        td:last-child,
+        th:last-child {
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+        }
+
+        td:last-child {
+            font-weight: 600;
+        }
+
+        /* ---------- Focus & motion ---------- */
+        .menu-btn:focus-visible,
+        .close-btn:focus-visible,
+        .sidebar a:focus-visible {
+            outline: 2px solid var(--green);
+            outline-offset: 2px;
+        }
+
+        .manage-text {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin: -6px 0 18px;
+        }
+
+        .manage-options {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .manage-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding: 22px 12px;
+            background: var(--bg);
+            color: var(--green);
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            font: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            transition: border-color 0.15s, background 0.15s;
+        }
+
+        .manage-btn svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .manage-btn:hover {
+            border-color: var(--green);
+            background: var(--panel-2);
+        }
+
+        .manage-btn:focus-visible {
+            outline: 2px solid var(--green);
+            outline-offset: 2px;
+        }
+
+        .manage-btn.danger {
+            color: #ff6f6f;
+        }
+
+        .manage-btn.danger:hover {
+            border-color: #ff6f6f;
+            background: rgba(255, 111, 111, 0.08);
+        }
+
+        .search-card {
+            grid-column: 1 / -1;
+        }
+
+        .manage-btn.danger:focus-visible {
+            outline-color: #ff6f6f;
+        }
+
+        @media (max-width: 520px) {
+            .manage-options {
+                grid-template-columns: 1fr;
+            }
+
+            .manage-btn {
+                flex-direction: row;
+                justify-content: center;
+                padding: 16px 12px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            .sidebar,
+            .overlay {
+                transition: none;
+            }
+        }
+
+        /* ---------- Responsive ---------- */
+        @media (max-width: 760px) {
+            main {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 420px) {
+
+            th,
+            td {
+                padding: 11px 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="topbar">
+        <button class="menu-btn" id="openBtn" aria-label="Open sidebar" aria-controls="sidebar" aria-expanded="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+        </button>
+        <h1>Dashboard</h1>
+    </header>
+
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar" aria-label="Main menu">
+        <div class="sidebar-head">
+            <span>Menu</span>
+            <button class="close-btn" id="closeBtn" aria-label="Close sidebar">&times;</button>
+        </div>
+        <nav>
+            <a href="/view-all-students">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8" />
+                </svg>
+                View all students
+            </a>
+            <a href="/class-students">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <rect x="3" y="3" width="7" height="7" />
+                    <rect x="14" y="3" width="7" height="7" />
+                    <rect x="3" y="14" width="7" height="7" />
+                    <rect x="14" y="14" width="7" height="7" />
+                </svg>
+                View students in each class
+            </a>
+            <a href="/profile">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <circle cx="12" cy="8" r="4" />
+                    <path d="M4 21a8 8 0 0 1 16 0" />
+                </svg>
+                View student profile
+            </a>
+            <a href="/add-student">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M12 5v14M5 12h14" />
+                </svg>
+                Add student
+            </a>
+        </nav>
+    </aside>
+
+    <main>
+        <section class="card">
+            <h2>Total student count</h2>
+            <div class="total-count">
+                <%= total %>
+            </div>
+        </section>
+
+        <section class="card manage">
+            <h2>Manage students</h2>
+            <p class="manage-text">Add, edit or remove student records.</p>
+
+            <div class="manage-options">
+                <button class="manage-btn" type="button">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M12 5v14M5 12h14" />
+                    </svg>
+                    Add
+                </button>
+
+                <button class="manage-btn" type="button">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M12 20h9" />
+                        <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z" />
+                    </svg>
+                    Edit
+                </button>
+
+                <button class="manage-btn danger" type="button">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M3 6h18" />
+                        <path d="M8 6V4h8v2" />
+                        <path d="M19 6l-1 14H6L5 6" />
+                        <path d="M10 11v6M14 11v6" />
+                    </svg>
+                    Remove
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Sidebar open / close
+        var sidebar = document.getElementById("sidebar");
+        var overlay = document.getElementById("overlay");
+        var openBtn = document.getElementById("openBtn");
+
+        function openSidebar() {
+            sidebar.classList.add("open");
+            overlay.classList.add("show");
+            openBtn.setAttribute("aria-expanded", "true");
+            document.getElementById("closeBtn").focus();
+        }
+        function closeSidebar() {
+            sidebar.classList.remove("open");
+            overlay.classList.remove("show");
+            openBtn.setAttribute("aria-expanded", "false");
+            openBtn.focus();
+        }
+
+        openBtn.addEventListener("click", openSidebar);
+        document.getElementById("closeBtn").addEventListener("click", closeSidebar);
+        overlay.addEventListener("click", closeSidebar);
+        document.addEventListener("keydown", function (e) {
+            if (e.key === "Escape" && sidebar.classList.contains("open")) closeSidebar();
+        });
+    </script>
+</body>
+
+</html>

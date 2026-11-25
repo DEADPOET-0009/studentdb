@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Students by class</title>
+    <style>
+        :root {
+            --bg: #001e2b;
+            --panel: #0b2a38;
+            --panel-2: #0f3142;
+            --line: #1c3d4c;
+            --green: #00ed64;
+            --green-soft: #13aa52;
+            --green-dim: #00684a;
+            --text-muted: #6fb99a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--green);
+            font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 14px clamp(16px, 4vw, 40px);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .back-link {
+            color: var(--green);
+            text-decoration: none;
+            padding: 8px 14px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--panel);
+        }
+
+        .back-link:hover {
+            border-color: var(--green-soft);
+        }
+
+        h1 {
+            font-size: clamp(22px, 3.2vw, 30px);
+            font-weight: 600;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: clamp(20px, 4vw, 40px);
+        }
+
+        /* class picker */
+        .picker {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px 16px;
+            margin-bottom: 24px;
+        }
+
+        .picker label {
+            font-weight: 600;
+        }
+
+        select {
+            min-width: 200px;
+            padding: 12px 14px;
+            background: var(--panel);
+            color: var(--green);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            font: inherit;
+            cursor: pointer;
+        }
+
+        select:hover {
+            border-color: var(--green-dim);
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--green);
+            box-shadow: 0 0 0 3px rgba(0, 237, 100, 0.18);
+        }
+
+        /* student cards */
+        .student-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: clamp(14px, 2.5vw, 24px);
+        }
+
+        .student-card {
+            padding: 20px;
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            transition: border-color 0.15s, background 0.15s;
+        }
+
+        .student-card:hover {
+            border-color: var(--green-soft);
+            background: var(--panel-2);
+        }
+
+        .name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            overflow-wrap: anywhere;
+        }
+
+        .detail {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .detail svg {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+            margin-top: 3px;
+            color: var(--green-soft);
+        }
+
+        .detail span {
+            overflow-wrap: anywhere;
+        }
+
+        .class-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .class-link {
+            color: var(--green);
+            text-decoration: none;
+            padding: 10px 18px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--panel);
+            transition: border-color 0.15s, background 0.15s;
+        }
+
+        .class-link:hover {
+            border-color: var(--green);
+            background: var(--panel-2);
+        }
+
+        .class-link:focus-visible {
+            outline: 2px solid var(--green);
+            outline-offset: 2px;
+        }
+
+        @media (max-width: 380px) {
+            select {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="topbar">
+        <a class="back-link" href="/dashboard">&larr; Dashboard</a>
+        <h1>Students by class</h1>
+    </header>
+
+    <main>
+
+        <div class="class-links">
+            <a class="class-link" href="/class-students?class=1">Class 1</a>
+            <a class="class-link" href="/class-students?class=2">Class 2</a>
+            <a class="class-link" href="/class-students?class=3">Class 3</a>
+            <a class="class-link" href="/class-students?class=4">Class 4</a>
+            <a class="class-link" href="/class-students?class=5">Class 5</a>
+            <a class="class-link" href="/class-students?class=6">Class 6</a>
+            <a class="class-link" href="/class-students?class=7">Class 7</a>
+            <a class="class-link" href="/class-students?class=8">Class 8</a>
+            <a class="class-link" href="/class-students?class=9">Class 9</a>
+            <a class="class-link" href="/class-students?class=10">Class 10</a>
+        </div>
+
+        <div class="student-grid">
+            <% students.forEach(function (s) { %>
+                <article class="student-card">
+                    <h3 class="name">
+                        <%= s.name %>
+                    </h3>
+
+                    <p class="detail">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 10 12 5 2 10l10 5 10-5z" />
+                            <path d="M6 12v5c3 2 9 2 12 0v-5" />
+                        </svg>
+                        <span>Class <%= s.class %></span>
+                    </p>
+
+                    <p class="detail">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z" />
+                            <circle cx="12" cy="10" r="2.5" />
+                        </svg>
+                        <span>
+                            <%= s.address %>
+                        </span>
+                    </p>
+                </article>
+                <% }); %>
+        </div>
+
+    </main>
+
+</body>
+
+</html>

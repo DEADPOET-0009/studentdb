@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Students</title>
+    <style>
+        :root {
+            --bg: #001e2b;
+            --panel: #0b2a38;
+            --panel-2: #0f3142;
+            --line: #1c3d4c;
+            --green: #00ed64;
+            --green-soft: #13aa52;
+            --text-muted: #6fb99a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 14px clamp(16px, 4vw, 40px);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .back-link {
+            color: var(--green);
+            text-decoration: none;
+            padding: 8px 14px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--panel);
+        }
+
+        .back-link:hover {
+            border-color: var(--green-soft);
+        }
+
+        h1 {
+            font-size: clamp(22px, 3.2vw, 30px);
+            font-weight: 600;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--green);
+            font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.5;
+            min-height: 100vh;
+            padding: clamp(20px, 4vw, 40px);
+        }
+
+        .student-grid {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: clamp(20px, 4vw, 40px);
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: clamp(14px, 2.5vw, 24px);
+        }
+
+        .student-card {
+            padding: 20px;
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            transition: border-color 0.15s, background 0.15s;
+        }
+
+        .student-card:hover {
+            border-color: var(--green-soft);
+            background: var(--panel-2);
+        }
+
+        .name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            overflow-wrap: anywhere;
+        }
+
+        .detail {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* this is what stops the icons from becoming huge */
+        .detail svg {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+            margin-top: 3px;
+            color: var(--green-soft);
+        }
+
+        .detail span {
+            overflow-wrap: anywhere;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="topbar">
+        <a class="back-link" href="/dashboard">&larr; Dashboard</a>
+        <h1>Students</h1>
+    </header>
+
+    
+
+    <div class="student-grid">
+        <% students.forEach(function (s) { %>
+            <article class="student-card">
+
+
+                <div class="info">
+                    <h3 class="name">
+                        <%= s.name %>
+                    </h3>
+
+                    <p class="detail">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 10 12 5 2 10l10 5 10-5z" />
+                            <path d="M6 12v5c3 2 9 2 12 0v-5" />
+                        </svg>
+                        <span>Class <%= s.class %></span>
+                    </p>
+
+                    <p class="detail">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z" />
+                            <circle cx="12" cy="10" r="2.5" />
+                        </svg>
+                        <span>
+                            <%= s.address %>
+                        </span>
+                    </p>
+
+                    <p class="detail">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z" />
+                            <circle cx="12" cy="10" r="2.5" />
+                        </svg>
+                        <span>
+                            <%= s.id %>
+                        </span>
+                    </p>
+                </div>
+
+            </article>
+            <% }); %>
+    </div>
+</body>
+
+</html>
